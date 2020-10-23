@@ -18,7 +18,7 @@ public class NetworkUtils {
     public static URL generalURL(String userId){
         Uri builtUri = Uri.parse(VK_API_BASE_URL+VK_USERS_GET).buildUpon()
                 .appendQueryParameter(PARAM_USER_ID,userId)
-                .appendQueryParameter(PARAM_access_token,"340388dd340388dd340388dda23477069c33403340388dd6b9169466b9e52a439d3652b")
+                .appendQueryParameter(PARAM_access_token,"340388dd3403")
                 .appendQueryParameter(PARAM_VERSION,"5.124").build();
         URL url = null;
         try {
