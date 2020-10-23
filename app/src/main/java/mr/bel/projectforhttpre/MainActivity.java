@@ -5,7 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URL;
 import static mr.bel.projectforhttpre.utils.NetworkUtils.generalURL;
@@ -16,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView viewVkInfo;
     private EditText InsertVkId;
     private Button Start;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +32,13 @@ public class MainActivity extends AppCompatActivity {
         viewVkInfo = (TextView) findViewById(R.id.textView);
         InsertVkId = (EditText) findViewById(R.id.editTextTextPersonName);
         Start = (Button) findViewById(R.id.button);
+        progressBar = (ProgressBar) findViewById(R.id.progbar);
 
         class VKQueryTask extends AsyncTask<URL,Void,String> {
+            protected void onPreExecute(){
+                progressBar.setVisibility(View.VISIBLE);
+
+            }
 
             @Override
             protected String doInBackground(URL... urls) {
@@ -39,7 +51,22 @@ public class MainActivity extends AppCompatActivity {
                 return response;
             }
             protected void onPostExecute(String response){
-                viewVkInfo.setText(response);
+                String FirstName = null;
+                String LastName = null;
+
+                try {
+                    JSONObject jo = new JSONObject(response);
+                    JSONArray ja = jo.getJSONArray("response");
+                    JSONObject userInfo = ja.getJSONObject(0);
+                    FirstName = userInfo.getString("first_name");
+                    LastName = userInfo.getString("last_name");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                StringBuilder result = new StringBuilder("");
+                result.append(FirstName).append(" ").append(LastName).append(" ");
+                viewVkInfo.setText(result);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         }
 
